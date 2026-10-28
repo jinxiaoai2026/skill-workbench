@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+if ! command -v node >/dev/null 2>&1; then
+  echo '请先安装 Node.js 24+，并让 node 在 PATH 中可用。' >&2
+  exit 1
+fi
+node -e 'if(Number(process.versions.node.split(".")[0])<24){console.error("需要 Node.js 24+");process.exit(1)}'
+if [ "${1:-}" = start ]; then
+  RUN_WORKER="${RUN_WORKER:-1}"
+  EXPLAIN_WITH_CODEX="${EXPLAIN_WITH_CODEX:-0}"
+  export RUN_WORKER EXPLAIN_WITH_CODEX
+fi
+if command -v pnpm >/dev/null 2>&1; then
+  exec pnpm "$@"
+elif command -v corepack >/dev/null 2>&1; then
+  exec corepack pnpm "$@"
+else
+  echo '请先安装 pnpm 11.25.0（npm install --global pnpm@11.25.0），然后重试。' >&2
+  exit 1
+fi
