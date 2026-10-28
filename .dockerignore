@@ -1,0 +1,13 @@
+node_modules
+.git
+.local
+.env
+.env.*
+!.env.example
+.superpowers
+.deploy
+.workbuddy
+*.genie
+dist
+*.sqlite*
+*.log

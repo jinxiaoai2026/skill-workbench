@@ -1,0 +1,56 @@
+services:
+  database:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: workbench
+      POSTGRES_USER: workbench
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U workbench"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  app:
+    build: .
+    restart: unless-stopped
+    environment: &app-environment
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 4317
+      APP_ORIGIN: ${APP_ORIGIN:?Set APP_ORIGIN}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD}
+      SESSION_KEY: ${SESSION_KEY:?Set SESSION_KEY}
+      DATABASE_URL: postgresql://workbench:${POSTGRES_PASSWORD}@database:5432/workbench
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    volumes:
+      - appdata:/app/.local
+    depends_on:
+      database:
+        condition: service_healthy
+  worker:
+    build: .
+    restart: unless-stopped
+    command: [pnpm, worker]
+    environment: *app-environment
+    volumes:
+      - appdata:/app/.local
+    depends_on:
+      database:
+        condition: service_healthy
+  gateway:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - certificates:/data
+    depends_on: [app]
+volumes:
+  database:
+  appdata:
+  certificates:

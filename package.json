@@ -1,0 +1,59 @@
+{
+  "name": "skill-workbench",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "test": "node --import tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx src/server/main.ts",
+    "web:dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "start": "tsx src/server/main.ts",
+    "collect": "tsx scripts/collect.ts",
+    "worker": "tsx scripts/worker.ts",
+    "connector": "tsx connector/cli.ts",
+    "verify:live": "tsx scripts/verify-live.ts",
+    "backup": "tsx scripts/backup.ts",
+    "connector:build": "tsx scripts/build-connector.ts",
+    "demo": "tsx scripts/demo.ts"
+  },
+  "dependencies": {
+    "@fastify/rate-limit": "^11.2.1",
+    "@fastify/secure-session": "^8.4.1",
+    "@fastify/static": "^10.1.7",
+    "cheerio": "^1.2.0",
+    "fastify": "^5.12.7",
+    "lucide-react": "^1.61.0",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "license": "MIT",
+  "description": "中文个人 Skill 工作台：管理原创与导入技能、统计明确调用、追踪 GitHub 多周期热榜。",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jinxiaoai2026/skill-workbench.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jinxiaoai2026/skill-workbench/issues"
+  },
+  "homepage": "https://github.com/jinxiaoai2026/skill-workbench#readme"
+}
